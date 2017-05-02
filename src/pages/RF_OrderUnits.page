@@ -1,0 +1,58 @@
+<apex:page standardController="Player__c" extensions="RF_PlayerUnitOrderFormVFCtrlExt" tabStyle="Player__c"  showHeader="false" sidebar="false" docType="html-5.0">
+    <apex:form > 
+        <apex:pageBlock title="Unit Order Form" rendered="{!hasAvailableInvestment}"> 
+            <apex:messages style="font-weight:bold; color:red;" />
+            <apex:outputPanel rendered="{!successMessage!=null}" style="font-weight:bold; color:green; text-align:center;" >
+                <p>{!successMessage}</p> 
+            </apex:outputPanel><br/> 
+
+            <apex:outputLabel for="UnitSelectionTable">Select a unit to invest in:</apex:outputLabel> 
+
+            <apex:pageBlockTable id="UnitSelectionTable" value="{!availableInvestmentSelectOptionRowList}" var="availableInvestmentSelectOptionRow">
+                <apex:column >
+                	<apex:outputtext escape="false" value="{!availableInvestmentSelectOptionRow.radioButton}" />
+                </apex:column>
+                <apex:column headerValue="Unit"            value="{!availableInvestmentSelectOptionRow.name}" style="font-weight: bold;"/>
+                <apex:column headerValue="Description"           value="{!availableInvestmentSelectOptionRow.description}" />
+                <apex:column headerValue="Development Manhours"  value="{!availableInvestmentSelectOptionRow.developmentManhours}" /> 
+                <apex:column headerValue="Upfront Cost"          value="{!availableInvestmentSelectOptionRow.upfrontCost}" />
+                <apex:column headerValue="Monthly Cost"          value="{!availableInvestmentSelectOptionRow.monthlyCost}" />  
+            </apex:pageBlockTable>  
+                <apex:inputHidden id="InvestmentIdValue" value="{!selectedInvestmentId}"/> 
+            <br/>           
+        
+            <table> 
+                <tr title="Lowering this value may cause Pending Investments to be deprioritized." > 
+                    <th><apex:outputLabel for="priorityValue" >Priority Value: </apex:outputLabel></th>
+                    <td><apex:input id="priorityValue" type="number" value="{!priorityValue}" /></td>
+                </tr>
+                <tr title="Number to employ.  Multiple units will be assigned consecutive priorities, starting from the value above." > 
+                    <th><apex:outputLabel for="quantity" >Quantity: </apex:outputLabel></th>
+                    <td><apex:input id="quantity" type="number" value="{!quantity}" /></td>
+                </tr>
+                <tr title="If this box is checked, RoboForce will queue you order even if you may not have enough money to pay for it." >
+                    <th><apex:outputLabel for="ignoreLiquidity">Ignore Liquidity</apex:outputLabel></th>
+                    <td><apex:inputCheckbox id="ignoreLiquidity" value="{!ignoreLiquidity}"/></td>
+                </tr>
+            </table>     
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!Order}" value="Order"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>  
+        
+    </apex:form>
+ 
+    <apex:pageBlock title="No Unit Available" rendered="{!!hasAvailableInvestment}"> 
+        <p>
+            You do not meet the requirements to develop any additional units.
+        </p>
+    </apex:pageBlock>
+    
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"/>
+    <script>
+        var roboForceApp = roboForceApp || {};
+
+        roboForceApp.changeRow = function (input) { $("[id$='InvestmentIdValue']").val(input.value); }
+    </script>
+</apex:page>

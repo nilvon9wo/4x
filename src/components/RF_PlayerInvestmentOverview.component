@@ -1,0 +1,50 @@
+<apex:component controller="RF_PlayerInvestmentOverviewVFCompCtrl">
+	<apex:attribute name="pageController" type="VF_VirtualVFPageCtrlBase" assignTo="{!vfPageCtrl}" required="true" description="The controller for the page. " />
+
+    <apex:pageBlock title="Player Investment Overviews">
+
+		<apex:pageBlockSection id="technologyInvestmentOverview" title="Technology Overview"  rendered="{!technologyList!=null}">
+			<apex:pageBlockTable value="{!technologyList}" var="technology">
+	 			<apex:column headerValue="Type" value="{!technology.name}" width="300"/>
+	  			<apex:column width="100"/>  
+				<apex:column headerValue="Monthly Cost" value="{!technology.monthlyCostCurrency}" />
+			</apex:pageBlockTable>
+		</apex:pageBlockSection>
+	
+		<apex:pageBlockSection id="buildingInvestmentOverview" title="Building Overview" rendered="{!buildingList!=null}">
+			<apex:pageBlockTable value="{!buildingList}" var="building">
+	 			<apex:column headerValue="Type"         value="{!building.name}" width="300"/>
+				<apex:column headerValue="Quantity"     value="{!building.quantity}"  width="100"/>
+				<apex:column headerValue="Monthly Cost" value="{!building.monthlyCostCurrency}" />
+			</apex:pageBlockTable>
+		</apex:pageBlockSection>
+		
+		<apex:pageBlockSection id="unitInvestmentOverview"  title="Unit Overview" rendered="{!unitList!=null}">
+			<apex:pageBlockTable value="{!unitList}" var="unit">
+	 			<apex:column headerValue="Type"         value="{!unit.name}" width="300"/>
+				<apex:column headerValue="Quantity"     value="{!unit.quantity}"  width="100"/>
+				<apex:column headerValue="Monthly Cost" value="{!unit.monthlyCostCurrency}" />
+			</apex:pageBlockTable>
+		</apex:pageBlockSection>
+	
+	</apex:pageBlock>
+ 
+    <script>
+        var roboForceApp = roboForceApp || {};
+        roboForceApp.collapseInvestments = function()
+        {
+            elements = $("[id$='InvestmentOverview'] .hideListButton");
+            elements.each
+            (
+                    function() { twistSection(this); }
+            );
+        }
+    
+        $(document).ready(function()
+        {
+            roboForceApp.collapseInvestments();
+        });
+    </script>
+	
+	
+</apex:component>

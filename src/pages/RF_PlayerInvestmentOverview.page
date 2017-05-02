@@ -1,0 +1,14 @@
+<apex:page standardController="Player__c" extensions="RF_PlayerVFCtrlExt" tabStyle="Player__c"  showHeader="false" sidebar="false">
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"/>
+
+    <apex:pageBlock html-style="visibility:hidden;">
+        <apex:pageBlockSection rendered="false" />
+    </apex:pageBlock>    <!-- This is needed to allow pageBlockSections in custom components to expand and collapse! -->
+
+    <c:RF_PlayerOverview pageController="{!this}" />
+    
+    <br/> 
+
+    <c:RF_PlayerInvestmentOverview pageController="{!this}" />
+
+</apex:page>

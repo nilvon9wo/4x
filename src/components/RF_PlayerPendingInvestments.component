@@ -1,0 +1,81 @@
+<apex:component controller="RF_PlayerPendingInvestmentsVFCompCtrl">
+	<apex:attribute name="pageController" type="VF_VirtualVFPageCtrlBase" assignTo="{!vfPageCtrl}" required="true" description="The controller for the page. " />
+
+	<apex:pageBlock title="Pending Investments"> 
+
+		<apex:pageBlockTable title="Pending Costs" value="{!ctrlPlayer}" var="player">
+			<apex:column headerValue="Total Upfront Cost" value="{!ctrlPlayer.Pending_Upfront_Cost__c}" />
+			<apex:column headerValue="Additional Monthly Cost" value="{!ctrlPlayer.Pending_Monthly_Cost__c}" />
+			<apex:column headerValue="Revised Total Monthly Cost" value="{!ctrlPlayer.Pending_Total_Monthly_Cost__c}" />
+		</apex:pageBlockTable>
+		
+		<br/>
+	
+		<apex:pageBlockSection id="technologyPendingOverview" title="Pending Technologies"  rendered="{!technologyList!=null}">
+			<apex:pageBlockTable id="technologyOrdered" value="{!technologyList}" var="technology"  title="Technology Ordered"  rendered="{!technologyList!=null}" >
+	 			<apex:column headerValue="Priority"     value="{!technology.priority}" 				width="150"/> 
+	 			<apex:column headerValue="Type"         value="{!technology.name}" 					width="300"/> 
+	 			<apex:column headerValue="Status"       value="{!technology.status}" 				width="150"/> 
+	 			<apex:column width="150"/> 
+	 			<apex:column headerValue="Upfront Cost" value="{!technology.upfrontCostCurrency}"   width="150"/> 
+	 			<apex:column headerValue="Monthyl Cost" value="{!technology.monthlyCostCurrency}"   width="150"/> 
+			</apex:pageBlockTable>
+		</apex:pageBlockSection>
+		
+		<apex:pageBlockSection id="buildingPendingOverview" title="Pending Buildings"  rendered="{!buildingList!=null}">
+			<apex:pageBlockTable id="buildingOrdered" value="{!buildingList}" var="building" title="Building Ordered" rendered="{!buildingList!=null}">
+	 			<apex:column headerValue="Priority"     value="{!building.priority}"				width="150"/> 
+	 			<apex:column headerValue="Type"         value="{!building.name}" 					width="300"/> 
+	 			<apex:column headerValue="Status"       value="{!building.status}" 					width="150"/> 
+	 			<apex:column headerValue="Quantity"     value="{!building.quantity}" 				width="150"/> 
+	 			<apex:column headerValue="Upfront Cost" value="{!building.upfrontCostCurrency}" 	width="150"/> 
+	 			<apex:column headerValue="Monthyl Cost" value="{!building.monthlyCostCurrency}" 	width="150"/> 
+			</apex:pageBlockTable> 
+		</apex:pageBlockSection>
+	
+		<apex:pageBlockSection id="unitPendingOverview" title="Pending Units"  rendered="{!unitList!=null}">
+			<apex:pageBlockTable id="unitOrdered" value="{!unitList}" var="unit" title="Unit Ordered" rendered="{!unitList!=null}">
+	 			<apex:column headerValue="Priority"     value="{!unit.priority}"					width="150"/> 
+	 			<apex:column headerValue="Type"         value="{!unit.name}" 						width="300"/> 
+	 			<apex:column headerValue="Status"       value="{!unit.status}" 						width="150"/> 
+	 			<apex:column headerValue="Quantity"     value="{!unit.quantity}" 					width="150"/> 
+	 			<apex:column headerValue="Upfront Cost" value="{!unit.upfrontCostCurrency}" 		width="150"/> 
+	 			<apex:column headerValue="Monthyl Cost" value="{!unit.monthlyCostCurrency}" 		width="150"/> 
+			</apex:pageBlockTable>
+		</apex:pageBlockSection>		
+
+	    <apex:outputPanel rendered="{!(buildingList==null)&&(technologyList==null)&&(unitList==null)}">
+	        <p>No investments are pending.</p>
+	    </apex:outputPanel>
+
+	    <apex:outputPanel rendered="{!(buildingList!=null)||(technologyList!=null)||(unitList!=null)}">
+		<div>
+			<p>RoboForce will attempt to actualize Pending Investements at midnight, game-time (current time: {!now}).</p>
+			 
+			<p>
+				If player has insufficient funds at that time, pending investments will realized according to their set priority.
+				Remaining investments will be reattempted at 24-hour intervals, until produced or canceled.
+			</p>
+		</div>
+	    </apex:outputPanel>
+
+	</apex:pageBlock>
+
+    <script>
+        var roboForceApp = roboForceApp || {};
+        roboForceApp.collapsePendingInvestments = function()
+        {
+            elements = $("[id$='PendingOverview'] .hideListButton");
+            elements.each
+            (
+                    function() { twistSection(this); }
+            );
+        }
+    
+        $(document).ready(function()
+        {
+            roboForceApp.collapsePendingInvestments();
+        });
+    </script>
+
+</apex:component>
